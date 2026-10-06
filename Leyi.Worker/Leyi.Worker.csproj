@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <UserSecretsId>leyi-worker-0b1e7d52-8f3a-4c61-bd1e-5a9c2e7f4d02</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Leyi.Application\Leyi.Application.csproj" />
+    <ProjectReference Include="..\Leyi.Infrastructure\Leyi.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+  </ItemGroup>
+
+</Project>

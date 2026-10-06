@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Leyi.Domain must stay free of framework/infrastructure dependencies:
+    no ASP.NET Core, EF Core, Redis, RabbitMQ, MassTransit, Hangfire, Serilog, OpenTelemetry, AI or storage SDKs.
+    Enforced by Leyi.ArchitectureTests.
+  -->
+
+</Project>
