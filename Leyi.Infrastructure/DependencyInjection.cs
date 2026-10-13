@@ -2,9 +2,11 @@ using Leyi.Infrastructure.Caching;
 using Leyi.Infrastructure.Configuration;
 using Leyi.Infrastructure.HealthChecks;
 using Leyi.Infrastructure.Identity;
+using Leyi.Infrastructure.LearningProfile;
 using Leyi.Infrastructure.Messaging;
 using Leyi.Infrastructure.Persistence;
 using Leyi.Infrastructure.Storage;
+using Leyi.Infrastructure.Today;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,6 +43,8 @@ public static class DependencyInjection
 
         services.AddPersistence();
         services.AddIdentityFoundation(configuration);
+        services.AddLearningProfile();
+        services.AddToday();
         services.AddCaching();
         services.AddMessaging(configuration, configureConsumers);
         services.AddReadinessHealthChecks();

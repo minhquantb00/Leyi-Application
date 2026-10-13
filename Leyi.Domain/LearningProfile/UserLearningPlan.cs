@@ -77,6 +77,18 @@ public sealed class UserLearningPlan : Entity
         CurrentLessonId = Guard.NotEmpty(currentLessonId);
     }
 
+    /// <summary>
+    /// The learner's active goal changed (UpdateLearningGoal, OB-G9): the plan follows the new active goal and keeps
+    /// its target date equal to the goal's (also when it is cleared). The curriculum position, plan type, placement
+    /// status and start time are not changed — a goal change never remaps the curriculum.
+    /// </summary>
+    public void RebaseToGoal(Guid goalId, DateOnly? targetDate)
+    {
+        EnsureActive();
+        GoalId = Guard.NotEmpty(goalId);
+        TargetDate = targetDate;
+    }
+
     public void ChangePlacementStatus(PlacementStatus placementStatus) => PlacementStatus = Guard.Defined(placementStatus);
 
     public void Pause()

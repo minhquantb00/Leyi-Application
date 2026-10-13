@@ -5,7 +5,8 @@ namespace Leyi.Domain.LearningProfile;
 
 /// <summary>
 /// A learner's goal (ERD §6.2). History is kept: changing the goal deactivates the old record and creates a new one.
-/// At most one active goal per user (filtered unique index). Changing a goal never resets mastery or evidence.
+/// At most one active goal per user (filtered unique index). Changing a goal never resets mastery or evidence, and the
+/// self-reported level is copied to the new version unchanged (OB-G9).
 /// </summary>
 public sealed class UserLearningGoal : Entity
 {
@@ -49,6 +50,20 @@ public sealed class UserLearningGoal : Entity
         SelfReportedLevel selfReportedLevel,
         short dailyStudyMinutes,
         byte? targetHskLevel = null,
+        DateOnly? targetDate = null) =>
+        Create(NewId(), userId, primaryGoal, selfReportedLevel, dailyStudyMinutes, targetHskLevel, targetDate);
+
+    /// <summary>
+    /// <see cref="Create(Guid, PrimaryGoal, SelfReportedLevel, short, byte?, DateOnly?)"/> with an id chosen by the
+    /// caller, so a retried operation persists the same goal version.
+    /// </summary>
+    public static UserLearningGoal Create(
+        Guid id,
+        Guid userId,
+        PrimaryGoal primaryGoal,
+        SelfReportedLevel selfReportedLevel,
+        short dailyStudyMinutes,
+        byte? targetHskLevel = null,
         DateOnly? targetDate = null)
     {
         if (!IsValidDailyStudyMinutes(dailyStudyMinutes))
@@ -61,7 +76,7 @@ public sealed class UserLearningGoal : Entity
             throw new DomainException(DomainErrorCodes.TargetHskInvalid, $"Target HSK level must be between {HskLevels.Min} and {HskLevels.Max}.");
         }
 
-        return new UserLearningGoal(NewId())
+        return new UserLearningGoal(Guard.NotEmpty(id))
         {
             UserId = Guard.NotEmpty(userId),
             PrimaryGoal = Guard.Defined(primaryGoal),
@@ -72,6 +87,16 @@ public sealed class UserLearningGoal : Entity
             IsActive = true,
         };
     }
+
+    /// <summary>
+    /// Whether this goal already has the given values of the four learner-editable fields (UpdateLearningGoal, OB-G9).
+    /// <see cref="SelfReportedLevel"/> is not editable and not compared.
+    /// </summary>
+    public bool HasGoal(PrimaryGoal primaryGoal, byte? targetHskLevel, DateOnly? targetDate, short dailyStudyMinutes) =>
+        PrimaryGoal == primaryGoal
+        && TargetHskLevel == targetHskLevel
+        && TargetDate == targetDate
+        && DailyStudyMinutes == dailyStudyMinutes;
 
     public void Deactivate() => IsActive = false;
 }

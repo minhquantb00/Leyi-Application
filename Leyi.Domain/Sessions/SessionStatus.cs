@@ -20,5 +20,8 @@ public static class SessionStatusExtensions
     /// <summary>Statuses covered by the one-open-session-per-user rule (filtered unique index).</summary>
     public static readonly IReadOnlyList<SessionStatus> OpenStatuses = [SessionStatus.Generated, SessionStatus.InProgress, SessionStatus.Paused];
 
+    /// <summary>Statuses of a session that has ended; such a session is "meaningful" for cold-start with enough evaluated activities (ASE §25).</summary>
+    public static readonly IReadOnlyList<SessionStatus> EndedStatuses = [SessionStatus.Completed, SessionStatus.Abandoned, SessionStatus.Expired];
+
     public static bool IsOpen(this SessionStatus status) => OpenStatuses.Contains(status);
 }

@@ -1,4 +1,6 @@
 using Leyi.Api.Endpoints.Identity;
+using Leyi.Api.Endpoints.Onboarding;
+using Leyi.Api.Endpoints.Today;
 using Leyi.Api.ErrorHandling;
 using Leyi.Api.Observability;
 using Leyi.Api.RateLimiting;
@@ -69,6 +71,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapAuthEndpoints();
+app.MapOnboardingEndpoints();
+app.MapTodayEndpoints();
 
 // Liveness: the process is running. No dependency checks.
 app.MapHealthChecks("/health/live", new HealthCheckOptions
